@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>衛生福利部彰化醫院 - 醫師值班、On-Call及腸胃科會診查詢系統</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 主題配色：#4188B3 鋼青藍 (Steel Blue) + 經典深藍 #002D62 */
+      --primary: #002D62;
+      --primary-dark: #001F44;
+      --steel-blue: #4188B3;
+      --steel-blue-dark: #2B6B94;
+      --steel-blue-light: #5A9FC7;
+      --ocean-bg: #f4f6f8;
+      --accent-gold: #E7C676;
+    }
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden !important;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      font-family: 'Microsoft JhengHei', '微軟正黑體', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    /* 徹底封鎖全頁與任何容器的左右卷軸 (強制高度為0) */
+    * {
+      scrollbar-width: thin;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 0px !important;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 45, 98, 0.2);
+      border-radius: 4px;
+    }
+    body {
+      font-family: 'Microsoft JhengHei', '微軟正黑體', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 700;
+      background-color: #f4f6f8;
+      background-image: none;
+      min-height: 100vh;
+      word-break: keep-all;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden !important;
+    }
+    input, button, select, textarea, table, th, td, h1, h2, h3, h4, h5, h6 {
+      font-family: 'Microsoft JhengHei', '微軟正黑體', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    }
+    .font-mono-num {
+      font-family: 'JetBrains Mono', 'Microsoft JhengHei', '微軟正黑體', monospace !important;
+    }
+    .badge-pulse {
+      animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.2); }
+    }
+    .copy-chip {
+      transition: all 0.15s ease-in-out;
+      white-space: nowrap;
+    }
+    .copy-chip:hover {
+      transform: translateY(-1px);
+    }
+    .copy-chip:active {
+      transform: scale(0.96);
+    }
+    .tab-active {
+      background-color: #ffffff !important;
+      color: #0E2A47 !important;
+      font-weight: 800 !important;
+      box-shadow: 0 2px 8px -1px rgba(10, 28, 46, 0.12), 0 2px 4px -2px rgba(10, 28, 46, 0.08);
+    }
+    .no-break {
+      white-space: nowrap;
+      word-break: keep-all;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- ================= 密碼安全鎖定視窗 ================= -->
+  <div id="lockScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 transition-all duration-300">
+    <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-md p-7 sm:p-8 text-center relative overflow-hidden">
+      <!-- 頂部裝飾條 -->
+      <div class="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-[#002D62] via-[#4188B3] to-[#74A8C7]"></div>
+      
+      <!-- 鎖定圖示 -->
+      <div class="w-16 h-16 bg-[#002D62] text-[#E7C676] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-slate-900/20 border border-slate-700/30">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+
+      <h2 class="text-2xl font-black text-[#002D62] tracking-tight no-break">院內系統安全驗證</h2>
+      <p class="text-xs text-slate-500 mt-1 mb-6 no-break">衛生福利部彰化醫院 · 醫師值班及會診查詢系統</p>
+
+      <form id="loginForm" onsubmit="handleUnlock(event)" class="space-y-4">
+        <div class="text-left">
+          <label class="block text-xs font-bold text-slate-600 mb-1.5 tracking-wider no-break">請輸入存取授權密碼 (4 位數)</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="passwordInput" 
+              maxlength="10"
+              placeholder="請輸入 4 位數密碼" 
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-[#4188B3] focus:border-[#002D62] outline-none transition text-center tracking-widest text-2xl font-mono-num font-bold bg-slate-50"
+              autocomplete="current-password"
+            />
+          </div>
+          <p id="errorMsg" class="text-xs text-rose-500 mt-2 hidden flex items-center justify-center gap-1 font-semibold no-break">
+            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            密碼錯誤！請重新輸入院內授權密碼
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-600 px-1">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="rememberMe" checked class="w-4 h-4 rounded text-[#002D62] focus:ring-[#4188B3]">
+            <span class="font-bold">在此裝置保持登入</span>
+          </label>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full bg-[#002D62] hover:bg-[#001F44] active:bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-slate-900/20 transition duration-150 flex items-center justify-center gap-2 cursor-pointer no-break"
+        >
+          <span>驗證進入系統</span>
+          <svg class="w-4 h-4 text-[#E7C676]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </form>
+
+      <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 no-break">
+        <span>院內醫療資訊保護</span>
+        <span class="inline-flex items-center gap-1 text-emerald-600 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>安全防護中
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 系統頂部導航列 (Navbar) ================= -->
+  <!-- ================= 系統頂部導航列 (Navbar)：第一張底圖改為第三張顏色 #4188B3 ================= -->
+  <header class="bg-[#74A8C7] text-white sticky top-0 z-40 shadow-sm border-b border-[#5E97B8] overflow-hidden w-full max-w-full">
+    <div class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex flex-col md:flex-row items-center justify-between gap-3 overflow-hidden">
+      
+      <!-- 標題與所屬醫院 -->
+      <div class="flex items-center gap-2.5 sm:gap-3 w-full md:w-auto shrink-0 justify-between md:justify-start">
+        <div class="flex items-center gap-2.5 sm:gap-3">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#5B96B8] border border-white/30 flex items-center justify-center text-[#E7C676] shadow-inner shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="font-extrabold text-base sm:text-lg tracking-tight text-white flex items-center gap-1.5 whitespace-nowrap">
+                <span>衛生福利部彰化醫院</span>
+                <span class="text-[#E7C676] font-semibold text-xs sm:text-sm">醫師值班及會診系統</span>
+              </h1>
+            </div>
+            <p class="text-[11px] text-sky-950 font-bold">各專科值班與 On-Call 即時速查 • 官方醫師代碼與簡碼</p>
+          </div>
+        </div>
+        
+        <span class="inline-flex md:hidden items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-900 border border-emerald-400/40 whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 badge-pulse"></span>
+          自動更新
+        </span>
+      </div>
+
+      <!-- 中央頁面切換頁籤 (全院值班 On-Call vs 腸胃科會診專頁) -->
+      <div class="flex items-center bg-[#5B96B8]/80 p-1 rounded-2xl border border-white/30 text-xs w-full md:w-auto justify-center shrink-0">
+        <button 
+          id="navTabMain" 
+          onclick="switchPage('main')" 
+          class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer tab-active text-[#002D62] whitespace-nowrap font-black"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span>🩺 全院值班及 On-Call</span>
+        </button>
+        <button 
+          id="navTabGI" 
+          onclick="switchPage('gi')" 
+          class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer text-white hover:bg-white/15 whitespace-nowrap font-black"
+        >
+          <span class="text-base">🫄</span>
+          <span>腸胃科會診排班</span>
+          <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-[#E7C676] text-slate-900 font-extrabold">專頁</span>
+        </button>
+      </div>
+
+      <!-- 右側：當前時間與鎖定測試按鈕 -->
+      <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        <div class="hidden lg:flex flex-col text-right whitespace-nowrap">
+          <span id="liveClock" class="font-mono-num text-xs font-bold text-white"></span>
+          <span class="text-[10px] text-sky-950 font-bold">院內標準時鐘</span>
+        </div>
+        <!-- 密碼鎖定按鈕 -->
+        <button 
+          onclick="lockSystem()" 
+          id="lockToggleBtn"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#5B96B8] hover:bg-[#4E8AA8] active:bg-[#3D7896] text-white border border-white/30 transition flex items-center gap-1.5 cursor-pointer shadow-sm whitespace-nowrap"
+          title="重新鎖定系統"
+        >
+          <svg class="w-3.5 h-3.5 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <span id="lockStatusText">鎖定系統</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= 頁面 1：主頁面【全院醫師值班及 On-Call 表】 ================= -->
+  <!-- 依指示：腸胃科會診專頁上面已獨立設立，此處全院科別不再重複列出腸胃科 -->
+  <main id="mainPageSection" class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-5 flex-1 space-y-4">
+    
+    <!-- 篩選控制面板 -->
+    <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 sm:p-5 space-y-4">
+      
+      <!-- 第一行：日期切換列 -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-slate-100">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 whitespace-nowrap">
+            <svg class="w-4 h-4 text-[#0E2A47]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            排班日期：
+          </span>
+          <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+            <button onclick="changeDate(-1)" class="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer" title="前一天">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <input 
+              type="date" 
+              id="targetDate" 
+              class="bg-transparent text-base font-black text-[#002D62] px-2 py-0.5 outline-none font-mono-num cursor-pointer"
+              onchange="onDateChange()"
+            />
+            <button onclick="changeDate(1)" class="p-1.5 hover:bg-white rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer" title="後一天">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <button 
+            onclick="resetToToday()" 
+            class="px-3.5 py-1.5 rounded-xl text-sm font-black bg-[#002D62]/10 hover:bg-[#002D62]/20 text-[#002D62] transition cursor-pointer whitespace-nowrap"
+          >
+            回今日 (9/24)
+          </button>
+        </div>
+
+        <!-- 當前選定日期資訊看板 -->
+        <div class="flex items-center gap-2">
+          <span id="dateBadge" class="text-sm font-black px-4 py-1.5 rounded-full bg-slate-100 text-[#002D62] border border-slate-300 whitespace-nowrap">
+            2026年9月24日 (星期四)
+          </span>
+          <span id="holidayBadge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 border border-rose-200 hidden whitespace-nowrap">
+            假日/例假日
+          </span>
+        </div>
+      </div>
+
+      <!-- 第二行：下拉選單與關鍵字搜尋 -->
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+        <!-- 科別下拉選單 (安寧會診順序往前；腸胃科會診已移至專頁) -->
+        <div class="sm:col-span-4 relative">
+          <label class="block text-xs font-bold text-slate-500 mb-1 whitespace-nowrap">🏥 醫療科別 / 項目</label>
+          <div class="relative">
+            <select 
+              id="deptFilter" 
+              onchange="applyFilters()" 
+              class="w-full appearance-none bg-slate-50 hover:bg-slate-100/80 border border-slate-300 rounded-xl px-4 py-3 text-base font-black text-[#002D62] outline-none focus:ring-2 focus:ring-[#0284C7] transition cursor-pointer"
+            >
+              <option value="ALL">全部科別 (預設全部顯示)</option>
+              <optgroup label="全院值班 (內/外/精)">
+                <option value="內科值班">內科值班</option>
+                <option value="外科值班">外科值班</option>
+                <option value="精神科值班">精神科值班</option>
+              </optgroup>
+              <optgroup label="內科專科 On-Call">
+                <option value="胸腔內科">胸腔內科</option>
+                <option value="風濕免疫科">風濕免疫科</option>
+                <option value="心臟內科">心臟內科</option>
+                <option value="腎臟內科">腎臟內科</option>
+                <option value="神經內科">神經內科</option>
+              </optgroup>
+              <optgroup label="外科專科 On-Call">
+                <option value="一般外科">一般外科</option>
+                <option value="外傷科">外傷科</option>
+                <option value="骨科">骨科</option>
+                <option value="泌尿科">泌尿科</option>
+                <option value="神經外科">神經外科</option>
+                <option value="胸腔外科">胸腔外科</option>
+              </optgroup>
+              <optgroup label="安寧醫師會診">
+                <option value="安寧會診">安寧會診 (全天/上午/下午)</option>
+                <option value="安寧會診 (上午)">安寧會診 (上午)</option>
+                <option value="安寧會診 (下午)">安寧會診 (下午)</option>
+              </optgroup>
+              <optgroup label="婦兒與復健專科">
+                <option value="婦產科">婦產科</option>
+                <option value="小兒科">小兒科</option>
+                <option value="復健科">復健科</option>
+              </optgroup>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 關鍵字即時搜尋 -->
+        <div class="sm:col-span-8 relative">
+          <label class="block text-xs font-bold text-slate-500 mb-1 whitespace-nowrap">🔍 搜尋醫師姓名、代碼、科別代碼或簡碼</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <input 
+              type="text" 
+              id="searchInput" 
+              oninput="applyFilters()" 
+              placeholder="輸入醫師姓名、代碼、科別代碼或簡碼..." 
+              class="w-full pl-10 pr-9 py-3 text-base rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-[#002D62] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002D62] transition shadow-inner font-black"
+            />
+            <button 
+              id="clearSearchBtn" 
+              onclick="clearSearch()" 
+              class="absolute inset-y-0 right-0 pr-3 items-center hidden text-slate-400 hover:text-slate-600 cursor-pointer"
+              title="清除關鍵字"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 第三行：常用快速類別標籤 (改用 flex-wrap，自適應螢幕，絕不產生左右卷軸) -->
+      <div class="flex flex-wrap items-center gap-2 pt-1 pb-0.5 text-xs">
+        <span class="text-slate-500 font-bold text-xs whitespace-nowrap shrink-0">快捷切換：</span>
+        <div class="flex flex-wrap items-center gap-1.5 flex-1">
+          <button onclick="quickFilterDept('ALL')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-[#002D62] text-white transition cursor-pointer whitespace-nowrap shadow-sm">全部科別</button>
+          <button onclick="quickFilterDept('值班')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">全院值班 (內/外/精)</button>
+          <button onclick="quickFilterDept('內科')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">內科系 On-Call</button>
+          <button onclick="quickFilterDept('外科')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">外科系 On-Call</button>
+          <button onclick="quickFilterDept('安寧')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">安寧會診 (上/下)</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 狀態資訊列 (依指示：不用卡片檢視，專屬清單表格) -->
+    <div class="flex flex-wrap items-center justify-between px-1 gap-2">
+      <div class="text-sm font-bold text-slate-800 flex items-center gap-2 flex-wrap">
+        <span class="whitespace-nowrap text-[#002D62] font-black text-sm sm:text-base">查詢結果：共 <span id="matchCount" class="text-white font-black text-sm sm:text-base bg-[#002D62] px-2.5 py-0.5 rounded-lg shadow-sm">0</span> 筆</span>
+        <span class="text-slate-600/60">|</span>
+        <span class="text-slate-900 font-extrabold hidden sm:inline whitespace-nowrap text-xs sm:text-sm">排列順序：【科別代碼】➔【醫師代碼】➔【職務簡碼】，同一行並列顯示，點擊皆可一鍵複製</span>
+      </div>
+    </div>
+
+    <!-- 表格清單容器 (不用卡片檢視，常設顯示，經典深藍色 + 微軟正黑粗體，字體加大) -->
+    <div id="tableContainer" class="bg-white rounded-2xl border border-slate-300 overflow-hidden shadow-md w-full max-w-full">
+      <div class="w-full overflow-hidden">
+        <table class="w-full text-left border-collapse table-auto sm:table-fixed">
+          <thead>
+            <tr class="bg-slate-100/95 border-b-2 border-slate-300 text-sm sm:text-base font-black text-[#002D62]">
+              <th class="py-3.5 px-3 sm:px-5 w-32 sm:w-44 whitespace-nowrap tracking-wide">醫療科別 / 項目</th>
+              <th class="py-3.5 px-3 sm:px-5 whitespace-nowrap tracking-wide">當值醫師 與 代碼資訊 (同一行並列 · 點擊複製)</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-200/80 text-base font-bold">
+            <!-- 動態載入列 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 無搜尋結果提示 -->
+    <div id="emptyState" class="bg-white rounded-2xl border border-slate-200 p-8 sm:p-12 text-center hidden">
+      <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3 text-slate-400">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <h3 class="text-base font-bold text-slate-700 whitespace-nowrap">查無符合條件的醫師或代碼</h3>
+      <p class="text-xs text-slate-400 mt-1 whitespace-nowrap">請嘗試變更科別下拉選單，或輸入其他醫師姓名/代碼</p>
+      <button onclick="resetAllFilters()" class="mt-4 px-4 py-2 bg-[#0E2A47] text-white text-xs font-bold rounded-xl hover:bg-[#0A1C2E] transition cursor-pointer whitespace-nowrap">
+        重設全部篩選條件
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ================= 頁面 2：專屬專頁【腸胃科會診排班表】 ================= -->
+  <!-- 純中文名字、代碼並列、單週/雙週明確、無時段及冗餘提示、自適應整頁顯示零卷軸 -->
+  <main id="giPageSection" class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-5 flex-1 space-y-4 sm:space-y-5 hidden">
+    
+    <!-- 頂部返回與狀態提示 -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-[#74A8C7] text-white p-4 sm:p-5 rounded-3xl shadow-sm border border-[#5E97B8] overflow-hidden">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-sky-500/20 text-sky-300 border border-sky-400/30 flex items-center justify-center text-xl sm:text-2xl font-bold shadow-inner shrink-0">
+          🫄
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 class="text-base sm:text-xl font-black tracking-tight text-white whitespace-nowrap">腸胃科會診排班專頁</h2>
+            <span class="text-xs bg-[#E7C676] text-slate-900 px-2.5 py-0.5 rounded-full font-black whitespace-nowrap">純中文排程</span>
+          </div>
+          <p class="text-xs text-sky-100/90 mt-0.5">直接顯示當值醫師中文姓名 • 附帶醫師代碼、科別代碼與簡碼</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button 
+          onclick="switchPage('main')" 
+          class="px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 active:bg-white/30 text-white border border-white/20 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span>返回全院值班表</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 腸胃科會診三位專任醫師主檔卡 (自適應排列，不溢出出卷軸) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <!-- 王棋新 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
+        <div class="whitespace-nowrap">
+          <div class="text-base font-black text-slate-900">王棋新 <span class="text-xs font-normal text-slate-500">醫師</span></div>
+          <div class="text-xs text-slate-500 mt-0.5">科別：腸胃內科</div>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="copyCode('AA', '腸胃內科 科別代碼')" class="font-mono-num font-bold text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2 py-1 rounded-lg border border-indigo-200 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製科別代碼">
+            科別 <span class="font-black">AA</span>
+          </button>
+          <button onclick="copyCode('1505', '王棋新 醫師代碼')" class="font-mono-num font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg border border-slate-200 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製代碼">
+            代碼 <span class="font-black">1505</span>
+          </button>
+          <button onclick="copyCode('*1380', '王棋新 簡碼')" class="font-mono-num font-black text-xs bg-teal-50 hover:bg-teal-100 text-teal-800 px-2 py-1 rounded-lg border border-teal-300 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製簡碼">
+            簡碼 <span class="font-black">*1380</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 蔡安順 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
+        <div class="whitespace-nowrap">
+          <div class="text-base font-black text-slate-900">蔡安順 <span class="text-xs font-normal text-slate-500">醫師</span></div>
+          <div class="text-xs text-slate-500 mt-0.5">科別：腸胃內科</div>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="copyCode('AA', '腸胃內科 科別代碼')" class="font-mono-num font-bold text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2 py-1 rounded-lg border border-indigo-200 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製科別代碼">
+            科別 <span class="font-black">AA</span>
+          </button>
+          <button onclick="copyCode('0011', '蔡安順 醫師代碼')" class="font-mono-num font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg border border-slate-200 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製代碼">
+            代碼 <span class="font-black">0011</span>
+          </button>
+          <button onclick="copyCode('*1249', '蔡安順 簡碼')" class="font-mono-num font-black text-xs bg-teal-50 hover:bg-teal-100 text-teal-800 px-2 py-1 rounded-lg border border-teal-300 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製簡碼">
+            簡碼 <span class="font-black">*1249</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 楊智超 -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-4 shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-2.5">
+        <div class="whitespace-nowrap">
+          <div class="text-base font-black text-slate-900">楊智超 <span class="text-xs font-normal text-slate-500">醫師</span></div>
+          <div class="text-xs text-slate-500 mt-0.5">科別：腸胃內科</div>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="copyCode('AA', '腸胃內科 科別代碼')" class="font-mono-num font-bold text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2 py-1 rounded-lg border border-indigo-200 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製科別代碼">
+            科別 <span class="font-black">AA</span>
+          </button>
+          <button onclick="copyCode('0256', '楊智超 醫師代碼')" class="font-mono-num font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-1 rounded-lg border border-slate-200 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製代碼">
+            代碼 <span class="font-black">0256</span>
+          </button>
+          <button onclick="copyCode('*1202', '楊智超 簡碼')" class="font-mono-num font-black text-xs bg-teal-50 hover:bg-teal-100 text-teal-800 px-2 py-1 rounded-lg border border-teal-300 copy-chip cursor-pointer whitespace-nowrap" title="點擊複製簡碼">
+            簡碼 <span class="font-black">*1202</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 今日腸胃科會診即時焦點大卡 (純中文名字、無時段字樣、無冗贅提示、語句整齊完整) -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-slate-100">
+        <div class="flex items-center gap-2.5 no-break">
+          <span class="w-3 h-3 rounded-full bg-teal-500 badge-pulse"></span>
+          <h3 class="font-black text-slate-900 text-lg no-break">今日會診醫師</h3>
+          <span id="giTodayDateLabel" class="text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200 no-break">
+            2026年9月24日 (星期四)
+          </span>
+        </div>
+
+        <!-- 快速切換會診日期 -->
+        <div class="flex items-center gap-2 no-break">
+          <span class="text-xs font-bold text-slate-500 no-break">切換日期：</span>
+          <input 
+            type="date" 
+            id="giTargetDate" 
+            class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-800 px-3 py-1.5 rounded-xl outline-none font-mono-num cursor-pointer"
+            onchange="onGIDateChange()"
+          />
+          <button 
+            onclick="resetGIToToday()" 
+            class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer no-break"
+          >
+            回今日
+          </button>
+        </div>
+      </div>
+
+      <!-- 上下午兩大卡片 (純中文姓名 + 醫師代碼 + 科別代碼 + 簡碼) -->
+      <div id="giTodayCardsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- 動態渲染今日上午/下午會診醫師 -->
+      </div>
+    </div>
+
+    <!-- 常規每週會診排班表 (自適應整頁顯示零卷軸) -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h3 class="font-black text-slate-900 text-base sm:text-lg whitespace-nowrap">常規每週會診排班表</h3>
+          <p class="text-xs text-slate-400 mt-0.5">直接顯示醫師中文姓名 • 附帶醫師代碼、科別代碼與簡碼</p>
+        </div>
+        <span class="text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-3 py-1 rounded-xl whitespace-nowrap">
+          科別代碼：AA
+        </span>
+      </div>
+
+      <div class="w-full border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm">
+        <table class="w-full table-fixed text-center border-collapse">
+          <thead>
+            <tr class="bg-slate-100/90 text-slate-700 text-xs sm:text-sm font-black border-b border-slate-200">
+              <th class="py-3 px-1 sm:px-2 w-14 sm:w-20 text-center bg-slate-200/50 whitespace-nowrap">時段</th>
+              <th class="py-3 px-1 sm:px-2 whitespace-nowrap">星期一</th>
+              <th class="py-3 px-1 sm:px-2 whitespace-nowrap">星期二</th>
+              <th class="py-3 px-1 sm:px-2 whitespace-nowrap">星期三</th>
+              <th class="py-3 px-1 sm:px-2 bg-teal-500/10 text-teal-900 border-x border-teal-500/20 whitespace-nowrap">
+                <span>星期四</span> <span class="text-[9px] sm:text-[10px] bg-teal-600 text-white px-1.5 py-0.2 rounded-full font-bold">今日</span>
+              </th>
+              <th class="py-3 px-1 sm:px-2 whitespace-nowrap">星期五</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-xs sm:text-sm">
+            <!-- 上午 -->
+            <tr class="hover:bg-slate-50/60 transition">
+              <td class="py-3.5 px-1 sm:px-2 font-black bg-slate-50 text-slate-800 text-center whitespace-nowrap">
+                <span class="font-extrabold text-amber-700">上午</span>
+              </td>
+              <!-- 星期一 上午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">王棋新 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 1505</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1380</span>
+                </div>
+              </td>
+              <!-- 星期二 上午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">蔡安順 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 0011</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1249</span>
+                </div>
+              </td>
+              <!-- 星期三 上午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">王棋新 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 1505</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1380</span>
+                </div>
+              </td>
+              <!-- 星期四 上午 (今日) -->
+              <td class="py-3.5 px-1 sm:px-2 bg-teal-500/5 border-x border-teal-500/20 font-black">
+                <div class="text-teal-950 text-xs sm:text-base whitespace-nowrap">蔡安順 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-white px-1 py-0.5 rounded border border-indigo-200 font-bold whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-600 bg-white px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 0011</span>
+                  <button onclick="copyCode('*1249', '蔡安順 簡碼')" class="text-[10px] sm:text-[11px] font-mono-num text-teal-900 bg-teal-100 px-1.5 py-0.5 rounded border border-teal-300 font-black copy-chip cursor-pointer whitespace-nowrap">
+                    *1249 (複製)
+                  </button>
+                </div>
+              </td>
+              <!-- 星期五 上午 (單週/雙週) -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="space-y-1">
+                  <div class="text-[11px] sm:text-xs font-black text-slate-800 whitespace-nowrap">
+                    <span class="inline-block px-1 py-0.2 bg-amber-100 text-amber-900 rounded text-[9px] sm:text-[10px] mr-0.5 font-bold">單週</span>王棋新 <span class="font-mono-num text-slate-600 text-[10px] sm:text-[11px]">(AA 1505 <span class="text-teal-800 font-bold">*1380</span>)</span>
+                  </div>
+                  <div class="text-[11px] sm:text-xs font-black text-slate-800 whitespace-nowrap">
+                    <span class="inline-block px-1 py-0.2 bg-purple-100 text-purple-900 rounded text-[9px] sm:text-[10px] mr-0.5 font-bold">雙週</span>楊智超 <span class="font-mono-num text-slate-600 text-[10px] sm:text-[11px]">(AA 0256 <span class="text-teal-800 font-bold">*1202</span>)</span>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- 下午 -->
+            <tr class="hover:bg-slate-50/60 transition">
+              <td class="py-3.5 px-1 sm:px-2 font-black bg-slate-50 text-slate-800 text-center whitespace-nowrap">
+                <span class="font-extrabold text-indigo-700">下午</span>
+              </td>
+              <!-- 星期一 下午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">楊智超 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 0256</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1202</span>
+                </div>
+              </td>
+              <!-- 星期二 下午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">蔡安順 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 0011</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1249</span>
+                </div>
+              </td>
+              <!-- 星期三 下午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">楊智超 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 0256</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1202</span>
+                </div>
+              </td>
+              <!-- 星期四 下午 (今日) -->
+              <td class="py-3.5 px-1 sm:px-2 bg-teal-500/5 border-x border-teal-500/20 font-black">
+                <div class="text-teal-950 text-xs sm:text-base whitespace-nowrap">王棋新 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-white px-1 py-0.5 rounded border border-indigo-200 font-bold whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-600 bg-white px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 1505</span>
+                  <button onclick="copyCode('*1380', '王棋新 簡碼')" class="text-[10px] sm:text-[11px] font-mono-num text-teal-900 bg-teal-100 px-1.5 py-0.5 rounded border border-teal-300 font-black copy-chip cursor-pointer whitespace-nowrap">
+                    *1380 (複製)
+                  </button>
+                </div>
+              </td>
+              <!-- 星期五 下午 -->
+              <td class="py-3.5 px-1 sm:px-2">
+                <div class="font-black text-slate-900 text-xs sm:text-base whitespace-nowrap">王棋新 醫師</div>
+                <div class="flex items-center justify-center gap-1 mt-1 flex-wrap">
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-indigo-700 bg-indigo-50 px-1 py-0.5 rounded border border-indigo-200 whitespace-nowrap">AA</span><span class="text-[10px] sm:text-[11px] font-mono-num text-slate-500 bg-slate-100 px-1 py-0.5 rounded border border-slate-200 whitespace-nowrap">代碼 1505</span>
+                  <span class="text-[10px] sm:text-[11px] font-mono-num text-teal-800 bg-teal-50 px-1 py-0.5 rounded border border-teal-200 font-bold whitespace-nowrap">*1380</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 9月份全月會診每日速查清單 (純中文 + 代碼) -->
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 sm:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h3 class="font-black text-slate-900 text-base sm:text-lg whitespace-nowrap">115年9月每日腸胃科會診速查清單 (全月)</h3>
+        <span class="text-xs font-bold text-slate-400 whitespace-nowrap">已自動標示單週 / 雙週</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" id="giMonthlyListContainer">
+        <!-- 動態渲染全月每日中文會診卡片 -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= 浮動吐司提示 (Toast Notification) ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition duration-300 pointer-events-none">
+    <div class="bg-slate-900/95 text-white px-4 py-2.5 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2.5 text-xs font-bold no-break">
+      <div class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      </div>
+      <span id="toastMsg" class="no-break">已複製到剪貼簿</span>
+    </div>
+  </div>
+
+  <!-- ================= 系統邏輯與純淨資料 (Script) ================= -->
+  <script>
+    const AUTH_STORAGE_KEY = 'chw_doc_oncall_auth_v1';
+    const AUTH_CORRECT_PIN = '0000';
+
+    // 整合醫師主檔：
+    // docCode: 醫師代碼 (門診時段交叉查詢系統)
+    // deptCode: 科別代碼 (門診時段交叉查詢系統)
+    // dutyCode: 職務分配表簡碼 (院內分機 & 職務分配表及簡碼)
+    const DOCTOR_MASTER = {
+      // 腸胃內科專任會診醫師
+      '王棋新': { docCode: '1505', deptCode: 'AA', dutyCode: '*1380', dept: '腸胃內科' },
+      '蔡安順': { docCode: '0011', deptCode: 'AA', dutyCode: '*1249', dept: '腸胃內科' },
+      '楊智超': { docCode: '0256', deptCode: 'AA', dutyCode: '*1202', dept: '腸胃內科' },
+
+      // 內科系各專科
+      '廖曜磐': { docCode: '0103', deptCode: '01', dutyCode: '*1091', dept: '家醫/內科' },
+      '莊佳慧': { docCode: '2401', deptCode: 'AH', dutyCode: '*1259', dept: '感染科' },
+      '李翰':   { docCode: '0237', deptCode: 'AB', dutyCode: '*1181', dept: '心臟內科' },
+      '黃耀宣': { docCode: '0286', deptCode: 'AD', dutyCode: '*1089', dept: '腎臟內科' },
+      '張子晏': { docCode: '0027', deptCode: 'AC', dutyCode: '*1116', dept: '胸腔內科' },
+      '何東錦': { docCode: '0267', deptCode: 'AB', dutyCode: '*1067', dept: '心臟內科' },
+      '王仕凱': { docCode: '1504', deptCode: 'AE', dutyCode: '*1371', dept: '風濕免疫科' },
+      '余養豪': { docCode: '0035', deptCode: 'AC', dutyCode: '*1356', dept: '胸腔內科' },
+      '高堅凱': { docCode: '0251', deptCode: 'AE', dutyCode: '*1228', dept: '風濕免疫科' },
+      '蔡旻叡': { docCode: '1601', deptCode: 'AD', dutyCode: '*1121', dept: '腎臟內科' },
+      '李學林': { docCode: '1508', deptCode: 'AB', dutyCode: '*1270', dept: '心臟內科' },
+      '張淑鈺': { docCode: '1604', deptCode: 'AD', dutyCode: '*1194', dept: '腎臟內科' },
+      '林嶸洲': { docCode: '1209', deptCode: '12', dutyCode: '*1394', dept: '神經內科' },
+      '王彥翔': { docCode: '1502', deptCode: 'AB', dutyCode: '*1359', dept: '心臟內科' },
+      '連宮瑩': { docCode: '1213', deptCode: '12', dutyCode: '*1126', dept: '神經內科' },
+      '林澤宏': { docCode: '0029', deptCode: 'AC', dutyCode: '*1045', dept: '胸腔內科' },
+
+      // 外科系各專科
+      '洪宗賢': { docCode: '0665', deptCode: '06', dutyCode: '*1175', dept: '骨科' },
+      '李文宏': { docCode: '0604', deptCode: '06', dutyCode: '*1188', dept: '骨科' },
+      '張昕煥': { docCode: '0713', deptCode: '07', dutyCode: '*1130', dept: '神經外科' },
+      '李忠懷': { docCode: '0321', deptCode: '03', dutyCode: '*1164', dept: '外科/乳房' },
+      '陳文銘': { docCode: '0809', deptCode: '08', dutyCode: '*1163', dept: '泌尿科' },
+      '賴肇康': { docCode: '0710', deptCode: '07', dutyCode: '*1196', dept: '神經外科' },
+      '趙紹清': { docCode: '0709', deptCode: '07', dutyCode: '*1212', dept: '神經外科' },
+      '林憲治': { docCode: '0801', deptCode: '08', dutyCode: '*1077', dept: '泌尿科' },
+      '王守吉': { docCode: '0304', deptCode: '06', dutyCode: '*1073', dept: '骨科' },
+      '蔡卓榮': { docCode: '0865', deptCode: '08', dutyCode: '*1236', dept: '泌尿科' },
+      '林聿騰': { docCode: '0341', deptCode: 'BC', dutyCode: '*1273', dept: '胸腔外科' },
+      '蘇美旭': { docCode: '0389', deptCode: '03', dutyCode: '*1226', dept: '外科' },
+      '余明昌': { docCode: '0306', deptCode: '03', dutyCode: '*1071', dept: '外科' },
+      '陳柏辰': { docCode: '0609', deptCode: '06', dutyCode: '*1355', dept: '骨科' },
+      '李佳穎': { docCode: '0333', deptCode: 'BC', dutyCode: '*1118', dept: '胸腔外科' },
+
+      // 精神科
+      '蕭銘鴻': { docCode: '1309', deptCode: '13', dutyCode: '*1108', dept: '精神科' },
+      '梁孫源': { docCode: '1307', deptCode: '13', dutyCode: '*1109', dept: '精神科' },
+      '李景嶽': { docCode: '1315', deptCode: '13', dutyCode: '*1204', dept: '精神科' },
+      '王鴻松': { docCode: '1310', deptCode: '13', dutyCode: '*1265', dept: '精神科' },
+      '陳羿行': { docCode: '1316', deptCode: '13', dutyCode: '*1224', dept: '精神科' },
+      '葉騰尹': { docCode: '1319', deptCode: '13', dutyCode: '*1291', dept: '精神科' },
+
+      // 婦兒復健與安寧
+      '林文斌': { docCode: '0511', deptCode: '05', dutyCode: '*1251', dept: '婦產科' },
+      '鍾瑞賢': { docCode: '0412', deptCode: '04', dutyCode: '*1156', dept: '小兒科' },
+      '馬瑞杉': { docCode: '0477', deptCode: '04', dutyCode: '*1179', dept: '小兒科' },
+      '廖宜新': { docCode: '1428', deptCode: '14', dutyCode: '*1304', dept: '復健科' },
+      '林昭宏': { docCode: '1427', deptCode: '14', dutyCode: '*1364', dept: '復健科' },
+      '郭馨鎂': { docCode: '0113', deptCode: '01', dutyCode: '*1378', dept: '家醫科/安寧' },
+      '張博竣': { docCode: '8355', deptCode: 'FB', dutyCode: '*1136', dept: '放腫科/安寧' }
+    };
+
+    function getDocInfo(name) {
+      if (DOCTOR_MASTER[name]) {
+        return DOCTOR_MASTER[name];
+      }
+      return { docCode: '----', deptCode: '--', dutyCode: '----', dept: '' };
+    }
+
+    // 115年9月 (2026年9月) 1~30日 每日真實排班資料
+    const monthlyRosterData = {
+      1: {
+        weekday: '二',
+        duty: { internal: '莊佳慧', surgery: '張昕煥', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      2: {
+        weekday: '三',
+        duty: { internal: '楊智超', surgery: '李忠懷', psych: '王鴻松' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+      },
+      3: {
+        weekday: '四',
+        duty: { internal: '李翰', surgery: '陳文銘', psych: '梁孫源' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '李翰', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      4: {
+        weekday: '五',
+        duty: { internal: '黃耀宣', surgery: '賴肇康', psych: '李景嶽' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '李文宏', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
+      },
+      5: {
+        weekday: '六', isWeekend: true,
+        duty: { internal: '張子晏', surgery: '趙紹清', psych: '梁孫源' },
+        oncall: { surgery: '李忠懷', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      6: {
+        weekday: '日', isWeekend: true,
+        duty: { internal: '何東錦', surgery: '李文宏', psych: '李景嶽' },
+        oncall: { surgery: '李忠懷', trauma: '張昕煥', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      7: {
+        weekday: '一',
+        duty: { internal: '王仕凱', surgery: '林憲治', psych: '蕭銘鴻' },
+        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      8: {
+        weekday: '二',
+        duty: { internal: '余養豪', surgery: '王守吉', psych: '葉騰尹' },
+        oncall: { surgery: '王守吉', trauma: '洪宗賢', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      9: {
+        weekday: '三',
+        duty: { internal: '蔡安順', surgery: '蔡卓榮', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+      },
+      10: {
+        weekday: '四',
+        duty: { internal: '高堅凱', surgery: '林聿騰', psych: '王鴻松' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '李翰', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      11: {
+        weekday: '五',
+        duty: { internal: '王棋新', surgery: '洪宗賢', psych: '梁孫源' },
+        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
+      },
+      12: {
+        weekday: '六', isWeekend: true,
+        duty: { internal: '蔡旻叡', surgery: '趙紹清', psych: '蕭銘鴻' },
+        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      13: {
+        weekday: '日', isWeekend: true,
+        duty: { internal: '李學林', surgery: '李文宏', psych: '王鴻松' },
+        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      14: {
+        weekday: '一',
+        duty: { internal: '張淑鈺', surgery: '蘇美旭', psych: '李景嶽' },
+        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      15: {
+        weekday: '二',
+        duty: { internal: '林嶸洲', surgery: '余明昌', psych: '葉騰尹' },
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      16: {
+        weekday: '三',
+        duty: { internal: '王彥翔', surgery: '張昕煥', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '蔡卓榮', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '蔡安順', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+      },
+      17: {
+        weekday: '四',
+        duty: { internal: '李翰', surgery: '李忠懷', psych: '王鴻松' },
+        oncall: { surgery: '李忠懷', trauma: '蔡卓榮', urology: '陳文銘', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '蔡安順', cardio: '李翰', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      18: {
+        weekday: '五',
+        duty: { internal: '廖曜磐', surgery: '陳文銘', psych: '梁孫源' },
+        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
+      },
+      19: {
+        weekday: '六', isWeekend: true,
+        duty: { internal: '黃耀宣', surgery: '賴肇康', psych: '李景嶽' },
+        oncall: { surgery: '李忠懷', trauma: '李文宏', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '賴肇康', nephro: '楊智超', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      20: {
+        weekday: '日', isWeekend: true,
+        duty: { internal: '連宮瑩', surgery: '李文宏', psych: '陳羿行' },
+        oncall: { surgery: '李忠懷', trauma: '賴肇康', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '賴肇康', nephro: '楊智超', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      21: {
+        weekday: '一',
+        duty: { internal: '林澤宏', surgery: '林憲治', psych: '蕭銘鴻' },
+        oncall: { surgery: '李忠懷', trauma: '賴肇康', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '賴肇康', nephro: '楊智超', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      22: {
+        weekday: '二',
+        duty: { internal: '何東錦', surgery: '王守吉', psych: '葉騰尹' },
+        oncall: { surgery: '王守吉', trauma: '賴肇康', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '趙紹清', nephro: '楊智超', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      23: {
+        weekday: '三',
+        duty: { internal: '莊佳慧', surgery: '蔡卓榮', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '賴肇康', urology: '陳文銘', ortho: '王守吉', neuroSurg: '趙紹清', nephro: '楊智超', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '李佳穎', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+      },
+      24: {
+        weekday: '四',
+        duty: { internal: '蔡安順', surgery: '洪宗賢', psych: '蕭銘鴻' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+      },
+      25: {
+        weekday: '五', isWeekend: true,
+        duty: { internal: '楊智超', surgery: '賴肇康', psych: '王鴻松' },
+        oncall: { surgery: '趙紹清', trauma: '李忠懷', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      26: {
+        weekday: '六', isWeekend: true,
+        duty: { internal: '王仕凱', surgery: '李文宏', psych: '梁孫源' },
+        oncall: { surgery: '趙紹清', trauma: '李忠懷', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '王彥翔', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      27: {
+        weekday: '日', isWeekend: true,
+        duty: { internal: '余養豪', surgery: '林憲治', psych: '李景嶽' },
+        oncall: { surgery: '趙紹清', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+      },
+      28: {
+        weekday: '一',
+        duty: { internal: '高堅凱', surgery: '王守吉', psych: '葉騰尹' },
+        oncall: { surgery: '趙紹清', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      29: {
+        weekday: '二',
+        duty: { internal: '王棋新', surgery: '林聿騰', psych: '陳羿行' },
+        oncall: { surgery: '王守吉', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+      },
+      30: {
+        weekday: '三',
+        duty: { internal: '蔡旻叡', surgery: '張昕煥', psych: '王鴻松' },
+        oncall: { surgery: '余明昌', trauma: '張昕煥', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+      }
+    };
+
+    
+    let selectedDate = '2026-09-24';
+    let selectedGIDate = '2026-09-24';
+    let currentPage = 'main';
+    let isLocked = false;
+
+    // 計算特定日期是該月份的第幾個星期五 (單週/雙週)
+    function getFridayType(year, month, day) {
+      let count = 0;
+      for (let d = 1; d <= day; d++) {
+        const dt = new Date(year, month - 1, d);
+        if (dt.getDay() === 5) count++;
+      }
+      return (count % 2 === 1) ? '單週' : '雙週';
+    }
+
+    // 計算指定日期的腸胃科會診醫師 (純中文姓名 + 醫師代碼 + 科別代碼 + 簡碼)
+    function getGIConsultation(dateStr) {
+      const parts = dateStr.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const dt = new Date(y, m - 1, d);
+      const weekday = dt.getDay(); // 0: 日, 1: 一, 2: 二, 3: 三, 4: 四, 5: 五, 6: 六
+
+      if (weekday === 0 || weekday === 6) {
+        const oncallDoc = (monthlyRosterData[d] && monthlyRosterData[d].oncall) ? monthlyRosterData[d].oncall.gi : '楊智超';
+        const info = getDocInfo(oncallDoc);
+        return {
+          isWeekend: true,
+          weekdayName: weekday === 0 ? '星期日' : '星期六',
+          am: { doc: '假日非例行會診 (請洽 On-Call)', docCode: info.docCode, deptCode: info.deptCode, dutyCode: info.dutyCode, oncallDoc: oncallDoc, weekTag: '' },
+          pm: { doc: '假日非例行會診 (請洽 On-Call)', docCode: info.docCode, deptCode: info.deptCode, dutyCode: info.dutyCode, oncallDoc: oncallDoc, weekTag: '' }
+        };
+      }
+
+      // 週一至週四常規排班
+      const weekdayMap = {
+        1: { amDoc: '王棋新', pmDoc: '楊智超' },
+        2: { amDoc: '蔡安順', pmDoc: '蔡安順' },
+        3: { amDoc: '王棋新', pmDoc: '楊智超' },
+        4: { amDoc: '蔡安順', pmDoc: '王棋新' }
+      };
+
+      if (weekday >= 1 && weekday <= 4) {
+        const amInfo = getDocInfo(weekdayMap[weekday].amDoc);
+        const pmInfo = getDocInfo(weekdayMap[weekday].pmDoc);
+        return {
+          isWeekend: false,
+          weekdayName: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][weekday],
+          am: { doc: weekdayMap[weekday].amDoc, docCode: amInfo.docCode, deptCode: amInfo.deptCode, dutyCode: amInfo.dutyCode, weekTag: '' },
+          pm: { doc: weekdayMap[weekday].pmDoc, docCode: pmInfo.docCode, deptCode: pmInfo.deptCode, dutyCode: pmInfo.dutyCode, weekTag: '' }
+        };
+      }
+
+      // 週五排班 (單週 / 雙週)
+      if (weekday === 5) {
+        const fType = getFridayType(y, m, d); // '單週' 或 '雙週'
+        const amDocName = (fType === '單週') ? '王棋新' : '楊智超';
+        const amInfo = getDocInfo(amDocName);
+        const pmInfo = getDocInfo('王棋新');
+
+        return {
+          isWeekend: false,
+          weekdayName: '星期五',
+          fridayType: fType,
+          am: { doc: amDocName, docCode: amInfo.docCode, deptCode: amInfo.deptCode, dutyCode: amInfo.dutyCode, weekTag: fType },
+          pm: { doc: '王棋新', docCode: pmInfo.docCode, deptCode: pmInfo.deptCode, dutyCode: pmInfo.dutyCode, weekTag: '' }
+        };
+      }
+    }
+
+    function getTodayString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      if (y === 2026 && m === '09') {
+        return `${y}-${m}-${d}`;
+      }
+      return '2026-09-24';
+    }
+
+    function initSystem() {
+      selectedDate = getTodayString();
+      selectedGIDate = selectedDate;
+
+      const dateInput = document.getElementById('targetDate');
+      dateInput.value = selectedDate;
+
+      const giDateInput = document.getElementById('giTargetDate');
+      giDateInput.value = selectedGIDate;
+      
+      updateDateDisplay();
+      updateLiveClock();
+      setInterval(updateLiveClock, 1000);
+
+      // 檢查是否已通過院內密碼授權 (預設鎖定，驗證通過才放行)
+      checkAuthOnLoad();
+
+      applyFilters();
+      renderGIPage();
+    }
+
+    // 頁面切換控制 (Main vs GI)
+    function switchPage(page) {
+      currentPage = page;
+      const mainSec = document.getElementById('mainPageSection');
+      const giSec = document.getElementById('giPageSection');
+      const tabMain = document.getElementById('navTabMain');
+      const tabGI = document.getElementById('navTabGI');
+
+      if (page === 'gi') {
+        mainSec.classList.add('hidden');
+        giSec.classList.remove('hidden');
+        tabGI.className = 'px-4 py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer tab-active text-[#0E2A47] no-break';
+        tabMain.className = 'px-4 py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white no-break';
+        renderGIPage();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        giSec.classList.add('hidden');
+        mainSec.classList.remove('hidden');
+        tabMain.className = 'px-4 py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer tab-active text-[#0E2A47] no-break';
+        tabGI.className = 'px-4 py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer text-slate-300 hover:text-white no-break';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // 密碼授權與安全防護核心邏輯
+    function checkAuthOnLoad() {
+      const isAuth = (localStorage.getItem(AUTH_STORAGE_KEY) === 'VERIFIED') || 
+                     (sessionStorage.getItem(AUTH_STORAGE_KEY) === 'VERIFIED');
+      if (isAuth) {
+        hideLockScreen();
+      } else {
+        showLockScreen();
+      }
+    }
+
+    function showLockScreen() {
+      isLocked = true;
+      const lockScreen = document.getElementById('lockScreen');
+      if (lockScreen) lockScreen.classList.remove('hidden');
+      const statusText = document.getElementById('lockStatusText');
+      if (statusText) statusText.textContent = '系統鎖定中';
+      const input = document.getElementById('passwordInput');
+      if (input) {
+        input.value = '';
+        setTimeout(() => input.focus(), 150);
+      }
+      const err = document.getElementById('errorMsg');
+      if (err) err.classList.add('hidden');
+    }
+
+    function hideLockScreen() {
+      isLocked = false;
+      const lockScreen = document.getElementById('lockScreen');
+      if (lockScreen) lockScreen.classList.add('hidden');
+      const statusText = document.getElementById('lockStatusText');
+      if (statusText) statusText.textContent = '鎖定系統';
+      const err = document.getElementById('errorMsg');
+      if (err) err.classList.add('hidden');
+    }
+
+    function lockSystem() {
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      sessionStorage.removeItem(AUTH_STORAGE_KEY);
+      showLockScreen();
+      showToast('🔒 系統已安全鎖定');
+    }
+
+    function handleUnlock(e) {
+      if (e) e.preventDefault();
+      const inputEl = document.getElementById('passwordInput');
+      const inputVal = inputEl.value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+      const rememberCheckbox = document.getElementById('rememberMe');
+      const remember = rememberCheckbox ? rememberCheckbox.checked : true;
+
+      if (inputVal === AUTH_CORRECT_PIN) {
+        if (remember) {
+          localStorage.setItem(AUTH_STORAGE_KEY, 'VERIFIED');
+        } else {
+          sessionStorage.setItem(AUTH_STORAGE_KEY, 'VERIFIED');
+        }
+        hideLockScreen();
+        showToast('✅ 密碼驗證成功，歡迎使用');
+      } else {
+        errorMsg.classList.remove('hidden');
+        inputEl.value = '';
+        inputEl.classList.add('border-rose-500', 'ring-2', 'ring-rose-300');
+        setTimeout(() => {
+          inputEl.classList.remove('border-rose-500', 'ring-2', 'ring-rose-300');
+        }, 1500);
+        inputEl.focus();
+      }
+    }
+
+    function updateLiveClock() {
+      const now = new Date();
+      const str = now.toLocaleDateString('zh-TW', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'short'
+      }) + ' ' + now.toLocaleTimeString('zh-TW', { hour12: false });
+      document.getElementById('liveClock').textContent = str;
+    }
+
+    function updateDateDisplay() {
+      const parts = selectedDate.split('-');
+      const y = parts[0];
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const dayData = monthlyRosterData[d];
+      const weekdayStr = dayData ? dayData.weekday : '';
+
+      document.getElementById('dateBadge').textContent = `${y}年${m}月${d}日 (星期${weekdayStr})`;
+
+      const holidayBadge = document.getElementById('holidayBadge');
+      if (dayData && dayData.isWeekend) {
+        holidayBadge.classList.remove('hidden');
+      } else {
+        holidayBadge.classList.add('hidden');
+      }
+    }
+
+    function onDateChange() {
+      selectedDate = document.getElementById('targetDate').value;
+      updateDateDisplay();
+      applyFilters();
+    }
+
+    function changeDate(delta) {
+      const parts = selectedDate.split('-');
+      let day = parseInt(parts[2], 10) + delta;
+      if (day < 1) day = 1;
+      if (day > 30) day = 30;
+      selectedDate = `2026-09-${String(day).padStart(2, '0')}`;
+      document.getElementById('targetDate').value = selectedDate;
+      updateDateDisplay();
+      applyFilters();
+    }
+
+    function resetToToday() {
+      selectedDate = getTodayString();
+      document.getElementById('targetDate').value = selectedDate;
+      updateDateDisplay();
+      applyFilters();
+    }
+
+    // 取得當日排班資料（注意：依指示，腸胃科專頁上面已有，此處全院科別不再重複列出腸胃科）
+    function getEntriesForDate(dayNum) {
+      const dayData = monthlyRosterData[dayNum];
+      if (!dayData) return [];
+
+      const entries = [];
+
+      // 1. 全院值班醫師 (內/外/精)
+      if (dayData.duty.internal) {
+        const info = getDocInfo(dayData.duty.internal);
+        entries.push({
+          dept: '內科值班',
+          doctor: dayData.duty.internal,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+      if (dayData.duty.surgery) {
+        const info = getDocInfo(dayData.duty.surgery);
+        entries.push({
+          dept: '外科值班',
+          doctor: dayData.duty.surgery,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+      if (dayData.duty.psych) {
+        const info = getDocInfo(dayData.duty.psych);
+        entries.push({
+          dept: '精神科值班',
+          doctor: dayData.duty.psych,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+
+      // 2. 【安寧會診】順序往前！直接排在全院值班之後
+      if (dayData.hospiceAM) {
+        const info = getDocInfo(dayData.hospiceAM);
+        entries.push({
+          dept: '安寧會診 (上午)',
+          doctor: dayData.hospiceAM,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+      if (dayData.hospicePM) {
+        const info = getDocInfo(dayData.hospicePM);
+        entries.push({
+          dept: '安寧會診 (下午)',
+          doctor: dayData.hospicePM,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+
+      // 3. 專科獨立 On-Call 表
+      if (dayData.chest) {
+        const info = getDocInfo(dayData.chest);
+        entries.push({
+          dept: '胸腔內科',
+          doctor: dayData.chest,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+      if (dayData.rheum) {
+        const info = getDocInfo(dayData.rheum);
+        entries.push({
+          dept: '風濕免疫科',
+          doctor: dayData.rheum,
+          docCode: info.docCode,
+          deptCode: info.deptCode,
+          dutyCode: info.dutyCode
+        });
+      }
+
+      // 4. 各專科 On-Call 班（依要求：腸胃科已由上方專頁統籌，不在下方全院科別重複出現）
+      const oncallMap = [
+        { key: 'cardio', dept: '心臟內科' },
+        { key: 'nephro', dept: '腎臟內科' },
+        { key: 'neuroMed', dept: '神經內科' },
+        { key: 'surgery', dept: '一般外科' },
+        { key: 'trauma', dept: '外傷科' },
+        { key: 'ortho', dept: '骨科' },
+        { key: 'urology', dept: '泌尿科' },
+        { key: 'neuroSurg', dept: '神經外科' },
+        { key: 'chestSurg', dept: '胸腔外科' },
+        { key: 'obgyn', dept: '婦產科' },
+        { key: 'peds', dept: '小兒科' },
+        { key: 'rehab', dept: '復健科' }
+      ];
+
+      oncallMap.forEach(item => {
+        const docName = dayData.oncall[item.key];
+        if (docName && docName !== '◎') {
+          const info = getDocInfo(docName);
+          entries.push({
+            dept: item.dept,
+            doctor: docName,
+            docCode: info.docCode,
+            deptCode: info.deptCode,
+            dutyCode: info.dutyCode
+          });
+        }
+      });
+
+      return entries;
+    }
+
+    function applyFilters() {
+      const dayNum = parseInt(selectedDate.split('-')[2], 10);
+      const allEntries = getEntriesForDate(dayNum);
+
+      const deptValue = document.getElementById('deptFilter').value;
+      const searchValue = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      const clearBtn = document.getElementById('clearSearchBtn');
+      if (searchValue.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      const filtered = allEntries.filter(item => {
+        if (deptValue !== 'ALL') {
+          if (!item.dept.includes(deptValue)) return false;
+        }
+
+        if (searchValue) {
+          const cleanCode = item.dutyCode.replace('*', '');
+          const matchStr = `${item.doctor} ${item.docCode} ${item.deptCode} ${item.dutyCode} ${cleanCode} ${item.dept}`.toLowerCase();
+          if (!matchStr.includes(searchValue)) return false;
+        }
+
+        return true;
+      });
+
+      document.getElementById('matchCount').textContent = filtered.length;
+
+      renderTable(filtered);
+
+      const emptyState = document.getElementById('emptyState');
+      const tableContainer = document.getElementById('tableContainer');
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        tableContainer.classList.remove('hidden');
+      }
+    }
+
+    function quickFilterDept(dept) {
+      document.getElementById('deptFilter').value = dept;
+      applyFilters();
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      applyFilters();
+    }
+
+    function resetAllFilters() {
+      document.getElementById('deptFilter').value = 'ALL';
+      document.getElementById('searchInput').value = '';
+      resetToToday();
+    }
+
+    
+
+    // 渲染卡片：【自適應排版，晶片不折字但可流暢折行】
+    
+
+    // 渲染清單表格：【排列在同一行、字體加大、經典深藍色 (#002D62)、微軟正黑粗體】
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = data.map(item => `
+        <tr class="hover:bg-blue-50/50 transition duration-150 border-b border-slate-200/90">
+          <td class="py-4 px-4 sm:px-6 font-black text-[#002D62] text-base sm:text-lg whitespace-nowrap">
+            ${item.dept}
+          </td>
+          <td class="py-4 px-4 sm:px-6">
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-nowrap whitespace-nowrap overflow-hidden py-0.5">
+              <span class="font-black text-[#002D62] text-sm sm:text-base whitespace-nowrap mr-0.5 shrink-0">
+                ${item.doctor} <span class="text-xs sm:text-sm font-bold text-slate-500">醫師</span>
+              </span>
+              
+              <!-- 順序：科別 -> 代碼 -> 簡碼 (排列在同一行，字體加大，微軟正黑粗體) -->
+              <button 
+                onclick="copyCode('${item.deptCode}', '${item.dept} 科別代碼')" 
+                class="font-mono-num font-black text-xs sm:text-sm text-indigo-950 bg-indigo-50 hover:bg-indigo-100 active:bg-indigo-200 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-indigo-200 transition copy-chip cursor-pointer whitespace-nowrap flex items-center gap-1 shrink-0 shadow-xs"
+                title="點擊複製科別代碼"
+              >
+                <span class="text-[11px] text-indigo-600 font-extrabold">科別</span> ${item.deptCode}
+              </button>
+
+              <button 
+                onclick="copyCode('${item.docCode}', '${item.doctor} 醫師代碼')" 
+                class="font-mono-num font-black text-xs sm:text-sm text-slate-900 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-slate-300 transition copy-chip cursor-pointer whitespace-nowrap flex items-center gap-1 shrink-0 shadow-xs"
+                title="點擊複製醫師代碼"
+              >
+                <span class="text-[11px] text-slate-600 font-extrabold">代碼</span> ${item.docCode}
+              </button>
+
+              <button 
+                onclick="copyCode('${item.dutyCode}', '${item.doctor} 簡碼')" 
+                class="font-mono-num font-black text-xs sm:text-sm text-teal-950 bg-teal-50 hover:bg-teal-100 active:bg-teal-200 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-teal-300 transition inline-flex items-center gap-1 cursor-pointer copy-chip whitespace-nowrap shrink-0 shadow-xs"
+                title="點擊複製簡碼"
+              >
+                <span class="text-[11px] text-teal-700 font-extrabold">簡碼</span> ${item.dutyCode}
+                <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ================= 腸胃科會診專頁邏輯 =================
+    function onGIDateChange() {
+      selectedGIDate = document.getElementById('giTargetDate').value;
+      renderGIPage();
+    }
+
+    function resetGIToToday() {
+      selectedGIDate = getTodayString();
+      document.getElementById('giTargetDate').value = selectedGIDate;
+      renderGIPage();
+    }
+
+    function renderGIPage() {
+      const parts = selectedGIDate.split('-');
+      const y = parts[0];
+      const m = parseInt(parts[1], 10);
+      const d = parseInt(parts[2], 10);
+      const giInfo = getGIConsultation(selectedGIDate);
+
+      document.getElementById('giTodayDateLabel').textContent = `${y}年${m}月${d}日 (${giInfo.weekdayName})`;
+
+      // 渲染今日上下午大卡 (純中文名字、無時段字樣、無冗餘提示、整句不換行)
+      const grid = document.getElementById('giTodayCardsGrid');
+      if (giInfo.isWeekend) {
+        grid.innerHTML = `
+          <div class="col-span-1 md:col-span-2 bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 text-center">
+            <div class="text-3xl mb-2">🏖️</div>
+            <h4 class="font-extrabold text-slate-800 text-base whitespace-nowrap">今日為 ${giInfo.weekdayName} (例假日)</h4>
+            <p class="text-xs text-slate-500 mt-1 mb-4">常規腸胃科照會於工作日服務。急診或住院緊急會診，請聯繫當日腸胃科 On-Call 醫師：</p>
+            <div class="inline-flex items-center gap-2.5 sm:gap-3 bg-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl border border-slate-200 shadow-sm flex-wrap justify-center">
+              <span class="text-sm font-bold text-slate-500 whitespace-nowrap">當日 On-Call 醫師：</span>
+              <span class="text-base sm:text-lg font-black text-slate-900 whitespace-nowrap">${giInfo.am.oncallDoc} 醫師</span>
+              <button 
+                onclick="copyCode('${giInfo.am.dutyCode}', '${giInfo.am.oncallDoc} 醫師簡碼')" 
+                class="font-mono-num font-black text-xs sm:text-sm text-teal-800 bg-teal-50 hover:bg-teal-100 px-2.5 py-1 rounded-lg border border-teal-300 transition copy-chip cursor-pointer whitespace-nowrap"
+              >
+                ${giInfo.am.dutyCode} (複製)
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        grid.innerHTML = `
+          <!-- 上午會診卡 (純中文、無時段與冗贅通知、自適應整頁顯示) -->
+          <div class="bg-gradient-to-br from-amber-500/10 via-amber-50/50 to-white border border-amber-200/80 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center gap-1.5 text-xs font-black text-amber-800 bg-amber-100 px-3 py-1 rounded-lg border border-amber-300/80 whitespace-nowrap">
+                <span>上午照會會診</span>
+                ${giInfo.am.weekTag ? `<span class="text-[10px] bg-amber-200 px-1.5 py-0.2 rounded font-bold">${giInfo.am.weekTag}</span>` : ''}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-3 my-2">
+              <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-amber-500/20 text-amber-800 font-black text-xl flex items-center justify-center border border-amber-300/60 shadow-inner shrink-0">
+                ${giInfo.am.doc.charAt(0)}
+              </div>
+              <div class="flex flex-col gap-1 min-w-0 flex-1">
+                <span class="text-lg sm:text-xl font-black text-slate-900 whitespace-nowrap">${giInfo.am.doc} <span class="text-xs font-bold text-slate-500">醫師</span></span>
+                
+                <!-- 代碼帶出：醫師代碼、科別代碼、簡碼 (自適應折行不破版) -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <!-- 順序：科別 -> 代碼 -> 簡碼 -->
+                  <button 
+                    onclick="copyCode('${giInfo.am.deptCode}', '腸胃內科 科別代碼')" 
+                    class="font-mono-num font-bold text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200 transition copy-chip cursor-pointer whitespace-nowrap"
+                    title="點擊複製科別代碼"
+                  >
+                    科別 <span class="font-black">${giInfo.am.deptCode}</span>
+                  </button>
+
+                  <button 
+                    onclick="copyCode('${giInfo.am.docCode}', '${giInfo.am.doc} 醫師代碼')" 
+                    class="font-mono-num font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded border border-slate-200 transition copy-chip cursor-pointer whitespace-nowrap"
+                    title="點擊複製醫師代碼"
+                  >
+                    代碼 <span class="font-black">${giInfo.am.docCode}</span>
+                  </button>
+
+                  <button 
+                    onclick="copyCode('${giInfo.am.dutyCode}', '${giInfo.am.doc} 簡碼')" 
+                    class="font-mono-num font-black text-xs text-teal-800 bg-teal-50 hover:bg-teal-100 active:bg-teal-200 px-2 py-0.5 rounded border border-teal-300 transition flex items-center gap-1 copy-chip cursor-pointer whitespace-nowrap"
+                    title="點擊複製簡碼"
+                  >
+                    簡碼 <span class="font-black">${giInfo.am.dutyCode}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 下午會診卡 (純中文、無時段與冗贅通知、自適應整頁顯示) -->
+          <div class="bg-gradient-to-br from-indigo-500/10 via-indigo-50/50 to-white border border-indigo-200/80 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-3">
+              <span class="inline-flex items-center gap-1.5 text-xs font-black text-indigo-800 bg-indigo-100 px-3 py-1 rounded-lg border border-indigo-300/80 whitespace-nowrap">
+                <span>下午照會會診</span>
+              </span>
+            </div>
+
+            <div class="flex items-center gap-3 my-2">
+              <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-indigo-500/20 text-indigo-800 font-black text-xl flex items-center justify-center border border-indigo-300/60 shadow-inner shrink-0">
+                ${giInfo.pm.doc.charAt(0)}
+              </div>
+              <div class="flex flex-col gap-1 min-w-0 flex-1">
+                <span class="text-lg sm:text-xl font-black text-slate-900 whitespace-nowrap">${giInfo.pm.doc} <span class="text-xs font-bold text-slate-500">醫師</span></span>
+                
+                <!-- 代碼帶出：醫師代碼、科別代碼、簡碼 (自適應折行不破版) -->
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <!-- 順序：科別 -> 代碼 -> 簡碼 -->
+                  <button 
+                    onclick="copyCode('${giInfo.pm.deptCode}', '腸胃內科 科別代碼')" 
+                    class="font-mono-num font-bold text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded border border-indigo-200 transition copy-chip cursor-pointer whitespace-nowrap"
+                    title="點擊複製科別代碼"
+                  >
+                    科別 <span class="font-black">${giInfo.pm.deptCode}</span>
+                  </button>
+
+                  <button 
+                    onclick="copyCode('${giInfo.pm.docCode}', '${giInfo.pm.doc} 醫師代碼')" 
+                    class="font-mono-num font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-2 py-0.5 rounded border border-slate-200 transition copy-chip cursor-pointer whitespace-nowrap"
+                    title="點擊複製醫師代碼"
+                  >
+                    代碼 <span class="font-black">${giInfo.pm.docCode}</span>
+                  </button>
+
+                  <button 
+                    onclick="copyCode('${giInfo.pm.dutyCode}', '${giInfo.pm.doc} 簡碼')" 
+                    class="font-mono-num font-black text-xs text-teal-800 bg-teal-50 hover:bg-teal-100 active:bg-teal-200 px-2 py-0.5 rounded border border-teal-300 transition flex items-center gap-1 copy-chip cursor-pointer whitespace-nowrap"
+                    title="點擊複製簡碼"
+                  >
+                    簡碼 <span class="font-black">${giInfo.pm.dutyCode}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 渲染全月清單
+      renderGIMonthlyList();
+    }
+
+    function renderGIMonthlyList() {
+      const container = document.getElementById('giMonthlyListContainer');
+      const cards = [];
+
+      for (let day = 1; day <= 30; day++) {
+        const dateStr = `2026-09-${String(day).padStart(2, '0')}`;
+        const gi = getGIConsultation(dateStr);
+        if (gi.isWeekend) continue;
+
+        const isToday = (day === 24);
+        cards.push(`
+          <div class="p-3.5 rounded-2xl border transition duration-150 ${isToday ? 'bg-teal-50/80 border-teal-400 ring-2 ring-teal-400/40' : 'bg-white border-slate-200 hover:border-slate-300'}">
+            <div class="flex items-center justify-between mb-2 no-break">
+              <div class="flex items-center gap-1.5 no-break">
+                <span class="font-extrabold text-sm text-slate-900 no-break">9/${day} (${gi.weekdayName.replace('星期', '週')})</span>
+                ${isToday ? '<span class="text-[10px] bg-teal-600 text-white px-1.5 py-0.2 rounded font-black no-break">今日</span>' : ''}
+              </div>
+              ${gi.fridayType ? `<span class="text-[10px] px-1.5 py-0.2 rounded font-bold no-break ${gi.fridayType === '單週' ? 'bg-amber-100 text-amber-900' : 'bg-purple-100 text-purple-900'}">${gi.fridayType}</span>` : ''}
+            </div>
+
+            <div class="space-y-1.5 text-xs">
+              <div class="flex items-center justify-between bg-slate-50 px-2 py-1 rounded-lg no-break">
+                <span class="text-slate-400 font-bold no-break">上午：</span>
+                <div class="flex items-center gap-1.5 no-break">
+                  <span class="font-black text-slate-800 no-break">${gi.am.doc}</span>
+                  <span class="text-[10px] text-indigo-700 bg-indigo-50 px-1 py-0.2 rounded border border-indigo-200 font-bold no-break">AA</span>
+                  <button onclick="copyCode('${gi.am.docCode}', '${gi.am.doc} 代碼')" class="font-mono-num text-[11px] text-slate-600 hover:underline cursor-pointer no-break" title="醫師代碼">
+                    (${gi.am.docCode})
+                  </button>
+                  <button onclick="copyCode('${gi.am.dutyCode}', '${gi.am.doc} 簡碼')" class="font-mono-num font-bold text-[11px] text-teal-800 hover:underline cursor-pointer no-break" title="簡碼">
+                    ${gi.am.dutyCode}
+                  </button>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between bg-slate-50 px-2 py-1 rounded-lg no-break">
+                <span class="text-slate-400 font-bold no-break">下午：</span>
+                <div class="flex items-center gap-1.5 no-break">
+                  <span class="font-black text-slate-800 no-break">${gi.pm.doc}</span>
+                  <span class="text-[10px] text-indigo-700 bg-indigo-50 px-1 py-0.2 rounded border border-indigo-200 font-bold no-break">AA</span>
+                  <button onclick="copyCode('${gi.pm.docCode}', '${gi.pm.doc} 代碼')" class="font-mono-num text-[11px] text-slate-600 hover:underline cursor-pointer no-break" title="醫師代碼">
+                    (${gi.pm.docCode})
+                  </button>
+                  <button onclick="copyCode('${gi.pm.dutyCode}', '${gi.pm.doc} 簡碼')" class="font-mono-num font-bold text-[11px] text-teal-800 hover:underline cursor-pointer no-break" title="簡碼">
+                    ${gi.pm.dutyCode}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+
+      container.innerHTML = cards.join('');
+    }
+
+    function copyCode(code, label) {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast(`已複製 ${label}: ${code}`);
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = code;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(`已複製 ${label}: ${code}`);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 1800);
+    }
+
+    window.addEventListener('DOMContentLoaded', initSystem);
+  </script>
+</body>
+</html>
