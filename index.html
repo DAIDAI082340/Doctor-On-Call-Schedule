@@ -4,20 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>衛生福利部彰化醫院 - 醫師值班、On-Call及腸胃科會診查詢系統</title>
-
-  <!-- PWA 標準設定 -->
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#245E82">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="值班速查">
-  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-
-  <!-- PWA App Meta -->
-  <meta name="description" content="衛生福利部彰化醫院 全院醫師值班、各專科On-Call、腸胃科會診排班即時速查，附帶官方醫師代碼與職務簡碼">
-  <meta name="mobile-web-app-capable" content="yes">
-
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -166,14 +152,14 @@
   </div>
 
   <!-- ================= 系統頂部導航列 (Navbar) ================= -->
-  <!-- ================= 系統頂部導航列 (Navbar)：深海墨藍色系 #245E82 ================= -->
-  <header class="bg-[#245E82] text-white sticky top-0 z-40 shadow-md border-b border-[#1A4B69] overflow-hidden w-full max-w-full">
+  <!-- ================= 系統頂部導航列 (Navbar)：第一張底圖改為第三張顏色 #4188B3 ================= -->
+  <header class="bg-[#74A8C7] text-white sticky top-0 z-40 shadow-sm border-b border-[#5E97B8] overflow-hidden w-full max-w-full">
     <div class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex flex-col md:flex-row items-center justify-between gap-3 overflow-hidden">
       
       <!-- 標題與所屬醫院 -->
       <div class="flex items-center gap-2.5 sm:gap-3 w-full md:w-auto shrink-0 justify-between md:justify-start">
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/15 border border-white/25 flex items-center justify-center text-[#E7C676] shadow-inner shrink-0">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#5B96B8] border border-white/30 flex items-center justify-center text-[#E7C676] shadow-inner shrink-0">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
             </svg>
@@ -185,18 +171,18 @@
                 <span class="text-[#E7C676] font-semibold text-xs sm:text-sm">醫師值班及會診系統</span>
               </h1>
             </div>
-            <p class="text-[11px] text-sky-100 font-bold">各專科值班與 On-Call 即時速查 • 官方醫師代碼與簡碼</p>
+            <p class="text-[11px] text-sky-950 font-bold">各專科值班與 On-Call 即時速查 • 官方醫師代碼與簡碼</p>
           </div>
         </div>
         
-        <span class="inline-flex md:hidden items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 whitespace-nowrap">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 badge-pulse"></span>
+        <span class="inline-flex md:hidden items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-900 border border-emerald-400/40 whitespace-nowrap">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 badge-pulse"></span>
           自動更新
         </span>
       </div>
 
       <!-- 中央頁面切換頁籤 (全院值班 On-Call vs 腸胃科會診專頁) -->
-      <div class="flex items-center bg-black/20 p-1 rounded-2xl border border-white/20 text-xs w-full md:w-auto justify-center shrink-0">
+      <div class="flex items-center bg-[#5B96B8]/80 p-1 rounded-2xl border border-white/30 text-xs w-full md:w-auto justify-center shrink-0">
         <button 
           id="navTabMain" 
           onclick="switchPage('main')" 
@@ -210,26 +196,26 @@
           onclick="switchPage('gi')" 
           class="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl transition duration-150 flex items-center gap-1.5 cursor-pointer text-white hover:bg-white/15 whitespace-nowrap font-black"
         >
-          <img src="gi_icon.png" alt="腸胃科" class="w-5 h-5 object-contain shrink-0">
+          <span class="text-base">🫄</span>
           <span>腸胃科會診排班</span>
           <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-[#E7C676] text-slate-900 font-extrabold">專頁</span>
         </button>
       </div>
 
-      <!-- 右側：當前時間與鎖定按鈕 -->
+      <!-- 右側：當前時間與鎖定測試按鈕 -->
       <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
         <div class="hidden lg:flex flex-col text-right whitespace-nowrap">
           <span id="liveClock" class="font-mono-num text-xs font-bold text-white"></span>
-          <span class="text-[10px] text-sky-200 font-bold">院內標準時鐘</span>
+          <span class="text-[10px] text-sky-950 font-bold">院內標準時鐘</span>
         </div>
         <!-- 密碼鎖定按鈕 -->
         <button 
           onclick="lockSystem()" 
           id="lockToggleBtn"
-          class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/15 hover:bg-white/25 active:bg-white/35 text-white border border-white/25 transition flex items-center gap-1.5 cursor-pointer shadow-sm whitespace-nowrap"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold bg-[#5B96B8] hover:bg-[#4E8AA8] active:bg-[#3D7896] text-white border border-white/30 transition flex items-center gap-1.5 cursor-pointer shadow-sm whitespace-nowrap"
           title="重新鎖定系統"
         >
-          <svg class="w-3.5 h-3.5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          <svg class="w-3.5 h-3.5 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
           <span id="lockStatusText">鎖定系統</span>
         </button>
       </div>
@@ -334,40 +320,18 @@
           </div>
         </div>
 
-        <!-- 關鍵字即時搜尋 -->
-        <div class="sm:col-span-8 relative">
-          <label class="block text-xs font-bold text-slate-500 mb-1 whitespace-nowrap">🔍 搜尋醫師姓名、代碼、科別代碼或簡碼</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <input 
-              type="text" 
-              id="searchInput" 
-              oninput="applyFilters()" 
-              placeholder="輸入醫師姓名、代碼、科別代碼或簡碼..." 
-              class="w-full pl-10 pr-9 py-3 text-base rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-[#002D62] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002D62] transition shadow-inner font-black"
-            />
-            <button 
-              id="clearSearchBtn" 
-              onclick="clearSearch()" 
-              class="absolute inset-y-0 right-0 pr-3 items-center hidden text-slate-400 hover:text-slate-600 cursor-pointer"
-              title="清除關鍵字"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-          </div>
-        </div>
+        <!-- 搜尋框已移除 (依使用者需求) -->
+        <input type="hidden" id="searchInput" value=""/>
       </div>
 
-      <!-- 第三行：常用快速類別標籤 (改用 flex-wrap，自適應螢幕，絕不產生左右卷軸) -->
+      <!-- 第三行：常用快速類別標籤 -->
       <div class="flex flex-wrap items-center gap-2 pt-1 pb-0.5 text-xs">
         <span class="text-slate-500 font-bold text-xs whitespace-nowrap shrink-0">快捷切換：</span>
         <div class="flex flex-wrap items-center gap-1.5 flex-1">
           <button onclick="quickFilterDept('ALL')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-[#002D62] text-white transition cursor-pointer whitespace-nowrap shadow-sm">全部科別</button>
           <button onclick="quickFilterDept('值班')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">全院值班 (內/外/精)</button>
-          <button onclick="quickFilterDept('內科')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">內科系 On-Call</button>
-          <button onclick="quickFilterDept('外科')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">外科系 On-Call</button>
+          <button onclick="quickFilterDept('內科系')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">內科系 On-Call</button>
+          <button onclick="quickFilterDept('外科系')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">外科系 On-Call</button>
           <button onclick="quickFilterDept('安寧')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">安寧會診 (上/下)</button>
         </div>
       </div>
@@ -1326,27 +1290,30 @@
       const allEntries = getEntriesForDate(dayNum);
 
       const deptValue = document.getElementById('deptFilter').value;
-      const searchValue = document.getElementById('searchInput').value.trim().toLowerCase();
 
-      const clearBtn = document.getElementById('clearSearchBtn');
-      if (searchValue.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
+      // 快捷分組關鍵字對應
+      const groupMap = {
+        'ALL':    null,
+        '值班':   ['內科值班', '外科值班', '精神科值班'],
+        '內科系': ['胸腔內科', '風濕免疫科', '心臟內科', '腎臟內科', '神經內科'],
+        '外科系': ['一般外科', '外傷科', '骨科', '泌尿科', '神經外科', '胸腔外科'],
+        '安寧':   ['安寧會診 (上午)', '安寧會診 (下午)'],
+      };
 
       const filtered = allEntries.filter(item => {
-        if (deptValue !== 'ALL') {
-          if (!item.dept.includes(deptValue)) return false;
+        if (deptValue === 'ALL') return true;
+
+        // 分組快捷篩選
+        if (groupMap[deptValue]) {
+          return groupMap[deptValue].some(k => item.dept.includes(k));
         }
 
-        if (searchValue) {
-          const cleanCode = item.dutyCode.replace('*', '');
-          const matchStr = `${item.doctor} ${item.docCode} ${item.deptCode} ${item.dutyCode} ${cleanCode} ${item.dept}`.toLowerCase();
-          if (!matchStr.includes(searchValue)) return false;
+        // 下拉選單個別篩選（含「安寧會診」整個分組）
+        if (deptValue === '安寧會診') {
+          return item.dept.includes('安寧會診');
         }
 
-        return true;
+        return item.dept.includes(deptValue);
       });
 
       document.getElementById('matchCount').textContent = filtered.length;
@@ -1657,15 +1624,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', initSystem);
-
-    // ===== PWA Service Worker 註冊 =====
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('✅ SW 已啟動:', reg.scope))
-          .catch(err => console.warn('SW 註冊失敗:', err));
-      });
-    }
   </script>
 </body>
 </html>

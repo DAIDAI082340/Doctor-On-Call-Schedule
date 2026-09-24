@@ -320,40 +320,18 @@
           </div>
         </div>
 
-        <!-- 關鍵字即時搜尋 -->
-        <div class="sm:col-span-8 relative">
-          <label class="block text-xs font-bold text-slate-500 mb-1 whitespace-nowrap">🔍 搜尋醫師姓名、代碼、科別代碼或簡碼</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </div>
-            <input 
-              type="text" 
-              id="searchInput" 
-              oninput="applyFilters()" 
-              placeholder="輸入醫師姓名、代碼、科別代碼或簡碼..." 
-              class="w-full pl-10 pr-9 py-3 text-base rounded-xl border border-slate-300 bg-slate-50 focus:bg-white text-[#002D62] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#002D62] transition shadow-inner font-black"
-            />
-            <button 
-              id="clearSearchBtn" 
-              onclick="clearSearch()" 
-              class="absolute inset-y-0 right-0 pr-3 items-center hidden text-slate-400 hover:text-slate-600 cursor-pointer"
-              title="清除關鍵字"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-          </div>
-        </div>
+        <!-- 搜尋框已移除 (依使用者需求) -->
+        <input type="hidden" id="searchInput" value=""/>
       </div>
 
-      <!-- 第三行：常用快速類別標籤 (改用 flex-wrap，自適應螢幕，絕不產生左右卷軸) -->
+      <!-- 第三行：常用快速類別標籤 -->
       <div class="flex flex-wrap items-center gap-2 pt-1 pb-0.5 text-xs">
         <span class="text-slate-500 font-bold text-xs whitespace-nowrap shrink-0">快捷切換：</span>
         <div class="flex flex-wrap items-center gap-1.5 flex-1">
           <button onclick="quickFilterDept('ALL')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-[#002D62] text-white transition cursor-pointer whitespace-nowrap shadow-sm">全部科別</button>
           <button onclick="quickFilterDept('值班')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">全院值班 (內/外/精)</button>
-          <button onclick="quickFilterDept('內科')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">內科系 On-Call</button>
-          <button onclick="quickFilterDept('外科')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">外科系 On-Call</button>
+          <button onclick="quickFilterDept('內科系')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">內科系 On-Call</button>
+          <button onclick="quickFilterDept('外科系')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">外科系 On-Call</button>
           <button onclick="quickFilterDept('安寧')" class="px-3.5 py-1.5 rounded-xl font-black text-sm bg-slate-100 hover:bg-slate-200 text-[#002D62] border border-slate-200 transition cursor-pointer whitespace-nowrap">安寧會診 (上/下)</button>
         </div>
       </div>
@@ -1312,27 +1290,30 @@
       const allEntries = getEntriesForDate(dayNum);
 
       const deptValue = document.getElementById('deptFilter').value;
-      const searchValue = document.getElementById('searchInput').value.trim().toLowerCase();
 
-      const clearBtn = document.getElementById('clearSearchBtn');
-      if (searchValue.length > 0) {
-        clearBtn.classList.remove('hidden');
-      } else {
-        clearBtn.classList.add('hidden');
-      }
+      // 快捷分組關鍵字對應
+      const groupMap = {
+        'ALL':    null,
+        '值班':   ['內科值班', '外科值班', '精神科值班'],
+        '內科系': ['胸腔內科', '風濕免疫科', '心臟內科', '腎臟內科', '神經內科'],
+        '外科系': ['一般外科', '外傷科', '骨科', '泌尿科', '神經外科', '胸腔外科'],
+        '安寧':   ['安寧會診 (上午)', '安寧會診 (下午)'],
+      };
 
       const filtered = allEntries.filter(item => {
-        if (deptValue !== 'ALL') {
-          if (!item.dept.includes(deptValue)) return false;
+        if (deptValue === 'ALL') return true;
+
+        // 分組快捷篩選
+        if (groupMap[deptValue]) {
+          return groupMap[deptValue].some(k => item.dept.includes(k));
         }
 
-        if (searchValue) {
-          const cleanCode = item.dutyCode.replace('*', '');
-          const matchStr = `${item.doctor} ${item.docCode} ${item.deptCode} ${item.dutyCode} ${cleanCode} ${item.dept}`.toLowerCase();
-          if (!matchStr.includes(searchValue)) return false;
+        // 下拉選單個別篩選（含「安寧會診」整個分組）
+        if (deptValue === '安寧會診') {
+          return item.dept.includes('安寧會診');
         }
 
-        return true;
+        return item.dept.includes(deptValue);
       });
 
       document.getElementById('matchCount').textContent = filtered.length;
