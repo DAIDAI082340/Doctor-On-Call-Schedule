@@ -756,186 +756,186 @@
       return { docCode: '----', deptCode: '--', dutyCode: '----', dept: '' };
     }
 
-    // 115年9月 (2026年9月) 1~30日 每日真實排班資料
+        // 115年9月 (2026年9月) 1~30日 每日真實排班資料 (100% 依據官方排班原圖校驗)
     const monthlyRosterData = {
       1: {
         weekday: '二',
         duty: { internal: '莊佳慧', surgery: '張昕煥', psych: '陳羿行' },
-        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '王彥翔', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '◎', chestSurg: '林聿騰', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       2: {
         weekday: '三',
         duty: { internal: '楊智超', surgery: '李忠懷', psych: '王鴻松' },
-        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '何東錦', gi: '楊智超', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '◎', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       3: {
         weekday: '四',
         duty: { internal: '李翰', surgery: '陳文銘', psych: '梁孫源' },
-        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '李翰', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '李翰', gi: '王棋新', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '◎', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       4: {
         weekday: '五',
         duty: { internal: '黃耀宣', surgery: '賴肇康', psych: '李景嶽' },
-        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '李文宏', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '李文宏', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '李學林', gi: '王棋新', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
       },
       5: {
         weekday: '六', isWeekend: true,
         duty: { internal: '張子晏', surgery: '趙紹清', psych: '梁孫源' },
-        oncall: { surgery: '李忠懷', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        oncall: { surgery: '李忠懷', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '王彥翔', gi: '楊智超', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
       },
       6: {
         weekday: '日', isWeekend: true,
         duty: { internal: '何東錦', surgery: '李文宏', psych: '李景嶽' },
-        oncall: { surgery: '李忠懷', trauma: '張昕煥', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        oncall: { surgery: '李忠懷', trauma: '張昕煥', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '何東錦', gi: '楊智超', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
       },
       7: {
         weekday: '一',
         duty: { internal: '王仕凱', surgery: '林憲治', psych: '蕭銘鴻' },
-        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '林憲治', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '何東錦', gi: '王棋新', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       8: {
         weekday: '二',
-        duty: { internal: '余養豪', surgery: '王守吉', psych: '葉騰尹' },
-        oncall: { surgery: '王守吉', trauma: '洪宗賢', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '余養豪', surgery: '張昕煥', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '林憲治', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '王彥翔', gi: '蔡安順', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       9: {
         weekday: '三',
-        duty: { internal: '蔡安順', surgery: '蔡卓榮', psych: '陳羿行' },
-        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+        duty: { internal: '蔡安順', surgery: '王守吉', psych: '王鴻松' },
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '林憲治', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '何東錦', gi: '楊智超', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       10: {
         weekday: '四',
-        duty: { internal: '高堅凱', surgery: '林聿騰', psych: '王鴻松' },
-        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '李翰', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '高堅凱', surgery: '李文宏', psych: '梁孫源' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '林憲治', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '李翰', gi: '王棋新', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       11: {
         weekday: '五',
-        duty: { internal: '王棋新', surgery: '洪宗賢', psych: '梁孫源' },
-        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
+        duty: { internal: '王棋新', surgery: '蔡卓榮', psych: '李景嶽' },
+        oncall: { surgery: '李忠懷', trauma: '張昕煥', urology: '林憲治', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '蔡旻叡', cardio: '李學林', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '郭馨鎂', hospicePM: ''
       },
       12: {
         weekday: '六', isWeekend: true,
-        duty: { internal: '蔡旻叡', surgery: '趙紹清', psych: '蕭銘鴻' },
-        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+        duty: { internal: '蔡旻叡', surgery: '張昕煥', psych: '王鴻松' },
+        oncall: { surgery: '余明昌', trauma: '蔡卓榮', urology: '林憲治', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '蔡旻叡', cardio: '李學林', gi: '王棋新', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '', hospicePM: ''
       },
       13: {
         weekday: '日', isWeekend: true,
-        duty: { internal: '李學林', surgery: '李文宏', psych: '王鴻松' },
-        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+        duty: { internal: '李學林', surgery: '蔡卓榮', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '張昕煥', urology: '林憲治', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '蔡旻叡', cardio: '李學林', gi: '王棋新', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '', hospicePM: ''
       },
       14: {
         weekday: '一',
-        duty: { internal: '張淑鈺', surgery: '蘇美旭', psych: '李景嶽' },
-        oncall: { surgery: '余明昌', trauma: '洪宗賢', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '張淑鈺', surgery: '林聿騰', psych: '蕭銘鴻' },
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '陳文銘', ortho: '王守吉', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '李學林', gi: '王棋新', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       15: {
         weekday: '二',
-        duty: { internal: '林嶸洲', surgery: '余明昌', psych: '葉騰尹' },
-        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '陳文銘', ortho: '賴肇康', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '余養豪', surgery: '洪宗賢', psych: '葉騰尹' },
+        oncall: { surgery: '余明昌', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '蔡旻叡', cardio: '王彥翔', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       16: {
         weekday: '三',
-        duty: { internal: '王彥翔', surgery: '張昕煥', psych: '陳羿行' },
-        oncall: { surgery: '余明昌', trauma: '蔡卓榮', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '蔡安順', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+        duty: { internal: '林嶸洲', surgery: '陳文銘', psych: '王鴻松' },
+        oncall: { surgery: '李忠懷', trauma: '林聿騰', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '蔡旻叡', cardio: '李翰', gi: '楊智超', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       17: {
         weekday: '四',
-        duty: { internal: '李翰', surgery: '李忠懷', psych: '王鴻松' },
-        oncall: { surgery: '李忠懷', trauma: '蔡卓榮', urology: '陳文銘', ortho: '李文宏', neuroSurg: '張昕煥', nephro: '蔡安順', cardio: '李翰', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '王棋新', surgery: '趙紹清', psych: '梁孫源' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '陳文銘', ortho: '李文宏', neuroSurg: '趙紹清', nephro: '蔡旻叡', cardio: '李翰', gi: '王棋新', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       18: {
         weekday: '五',
-        duty: { internal: '廖曜磐', surgery: '陳文銘', psych: '梁孫源' },
-        oncall: { surgery: '余明昌', trauma: '李文宏', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
+        duty: { internal: '蔡旻叡', surgery: '李忠懷', psych: '李景嶽' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '賴肇康', nephro: '蔡旻叡', cardio: '李學林', gi: '楊智超', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: ''
       },
       19: {
         weekday: '六', isWeekend: true,
-        duty: { internal: '黃耀宣', surgery: '賴肇康', psych: '李景嶽' },
-        oncall: { surgery: '李忠懷', trauma: '李文宏', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '賴肇康', nephro: '楊智超', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        duty: { internal: '莊佳慧', surgery: '賴肇康', psych: '葉騰尹' },
+        oncall: { surgery: '蘇美旭', trauma: '林聿騰', urology: '陳文銘', ortho: '王守吉', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '何東錦', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '鍾瑞賢' },
         chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
       },
       20: {
         weekday: '日', isWeekend: true,
-        duty: { internal: '連宮瑩', surgery: '李文宏', psych: '陳羿行' },
-        oncall: { surgery: '李忠懷', trauma: '賴肇康', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '賴肇康', nephro: '楊智超', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        duty: { internal: '黃耀宣', surgery: '林聿騰', psych: '王鴻松' },
+        oncall: { surgery: '蘇美旭', trauma: '洪宗賢', urology: '陳文銘', ortho: '王守吉', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '何東錦', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '鍾瑞賢' },
         chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
       },
       21: {
         weekday: '一',
-        duty: { internal: '林澤宏', surgery: '林憲治', psych: '蕭銘鴻' },
-        oncall: { surgery: '李忠懷', trauma: '賴肇康', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '賴肇康', nephro: '楊智超', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '何東錦', surgery: '蘇美旭', psych: '蕭銘鴻' },
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '蔡卓榮', ortho: '洪宗賢', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '何東錦', gi: '王棋新', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       22: {
         weekday: '二',
-        duty: { internal: '何東錦', surgery: '王守吉', psych: '葉騰尹' },
-        oncall: { surgery: '王守吉', trauma: '賴肇康', urology: '陳文銘', ortho: '趙紹清', neuroSurg: '趙紹清', nephro: '楊智超', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        duty: { internal: '王彥翔', surgery: '蔡卓榮', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '張昕煥', urology: '蔡卓榮', ortho: '洪宗賢', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '王彥翔', gi: '蔡安順', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       23: {
         weekday: '三',
-        duty: { internal: '莊佳慧', surgery: '蔡卓榮', psych: '陳羿行' },
-        oncall: { surgery: '余明昌', trauma: '賴肇康', urology: '陳文銘', ortho: '王守吉', neuroSurg: '趙紹清', nephro: '楊智超', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '李佳穎', peds: '鍾瑞賢' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+        duty: { internal: '張子晏', surgery: '林聿騰', psych: '王鴻松' },
+        oncall: { surgery: '李忠懷', trauma: '李忠懷', urology: '蔡卓榮', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '李學林', gi: '楊智超', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       },
       24: {
         weekday: '四',
-        duty: { internal: '蔡安順', surgery: '洪宗賢', psych: '蕭銘鴻' },
-        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '蔡安順', cardio: '王彥翔', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
+        duty: { internal: '廖曜磐', surgery: '李文宏', psych: '葉騰尹' },
+        oncall: { surgery: '余明昌', trauma: '李忠懷', urology: '蔡卓榮', ortho: '李文宏', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '李翰', gi: '王棋新', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '馬瑞杉' },
+        chest: '張子晏', rheum: '王仕凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       25: {
         weekday: '五', isWeekend: true,
-        duty: { internal: '楊智超', surgery: '賴肇康', psych: '王鴻松' },
-        oncall: { surgery: '趙紹清', trauma: '李忠懷', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '黃耀宣', cardio: '李學林', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+        duty: { internal: '林嶸洲', surgery: '李忠懷', psych: '李景嶽' },
+        oncall: { surgery: '李忠懷', trauma: '洪宗賢', urology: '蔡卓榮', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '李學林', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '張子晏', rheum: '王仕凱', hospiceAM: '', hospicePM: ''
       },
       26: {
         weekday: '六', isWeekend: true,
-        duty: { internal: '王仕凱', surgery: '李文宏', psych: '梁孫源' },
-        oncall: { surgery: '趙紹清', trauma: '李忠懷', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '王彥翔', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+        duty: { internal: '李翰', surgery: '洪宗賢', psych: '蕭銘鴻' },
+        oncall: { surgery: '李忠懷', trauma: '李忠懷', urology: '蔡卓榮', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '李翰', gi: '王棋新', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '', hospicePM: ''
       },
       27: {
         weekday: '日', isWeekend: true,
-        duty: { internal: '余養豪', surgery: '林憲治', psych: '李景嶽' },
-        oncall: { surgery: '趙紹清', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
-        chest: '林澤宏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
+        duty: { internal: '高堅凱', surgery: '蘇美旭', psych: '葉騰尹' },
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '蔡卓榮', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '李學林', gi: '楊智超', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '◎', chestSurg: '◎', peds: '馬瑞杉' },
+        chest: '余養豪', rheum: '王仕凱', hospiceAM: '', hospicePM: ''
       },
       28: {
-        weekday: '一',
-        duty: { internal: '高堅凱', surgery: '王守吉', psych: '葉騰尹' },
-        oncall: { surgery: '趙紹清', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '連宮瑩', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '馬瑞杉' },
-        chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
+        weekday: '一', isWeekend: true,
+        duty: { internal: '楊智超', surgery: '林憲治', psych: '蕭銘鴻' },
+        oncall: { surgery: '蘇美旭', trauma: '蔡卓榮', urology: '林憲治', ortho: '洪宗賢', neuroSurg: '趙紹清', nephro: '張淑鈺', cardio: '何東錦', gi: '楊智超', neuroMed: '連宮瑩', rehab: '林昭宏', obgyn: '◎', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        chest: '張子晏', rheum: '高堅凱', hospiceAM: '', hospicePM: ''
       },
       29: {
         weekday: '二',
-        duty: { internal: '王棋新', surgery: '林聿騰', psych: '陳羿行' },
-        oncall: { surgery: '王守吉', trauma: '張昕煥', urology: '陳文銘', ortho: '洪宗賢', neuroSurg: '賴肇康', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        duty: { internal: '王彥翔', surgery: '洪宗賢', psych: '陳羿行' },
+        oncall: { surgery: '余明昌', trauma: '張昕煥', urology: '林憲治', ortho: '洪宗賢', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '王彥翔', gi: '蔡安順', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '張博竣', hospicePM: '張博竣'
       },
       30: {
         weekday: '三',
-        duty: { internal: '蔡旻叡', surgery: '張昕煥', psych: '王鴻松' },
-        oncall: { surgery: '余明昌', trauma: '張昕煥', urology: '陳文銘', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '張淑鈺', cardio: '何東錦', neuroMed: '林嶸洲', rehab: '廖宜新', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
+        duty: { internal: '連宮瑩', surgery: '王守吉', psych: '王鴻松' },
+        oncall: { surgery: '蘇美旭', trauma: '林聿騰', urology: '林憲治', ortho: '王守吉', neuroSurg: '張昕煥', nephro: '黃耀宣', cardio: '王彥翔', gi: '楊智超', neuroMed: '林嶸洲', rehab: '林昭宏', obgyn: '林文斌', chestSurg: '林聿騰', peds: '鍾瑞賢' },
         chest: '張子晏', rheum: '高堅凱', hospiceAM: '郭馨鎂', hospicePM: '張博竣'
       }
     };
