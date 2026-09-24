@@ -1,0 +1,29 @@
+{
+  "name": "醫師值班及On-Call表查詢系統",
+  "short_name": "值班速查",
+  "description": "衛生福利部彰化醫院・全院值班On-Call・腸胃科會診・醫師代碼簡碼整合速查",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f6f8",
+  "theme_color": "#245E82",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
